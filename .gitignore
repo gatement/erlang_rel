@@ -1,0 +1,6 @@
+ebin
+deps
+.git
+.rebar
+.DS_Store
+erl_crash.dump

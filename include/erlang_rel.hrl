@@ -1,0 +1,3 @@
+%% records
+-record(state, {pid}).
+

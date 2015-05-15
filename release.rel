@@ -1,0 +1,16 @@
+{release,
+ {"erlang_rel", "0.1.0"},
+ {erts, "6.4"},
+ [
+  {kernel, "3.2"},
+  {stdlib, "2.4"},
+  {sasl, "2.4.1"},
+  {crypto, "3.5"},
+
+  {cowlib, "1.0.0"},
+  {ranch, "1.0.0"},
+  {cowboy, "1.0.1"},
+
+  {erlang_rel, "0.1.0"}
+ ]
+}.

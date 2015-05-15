@@ -5,7 +5,7 @@ REBAR = bin/rebar
 compile:
 	@$(REBAR) get-deps compile
 
-run: compile
+run:
 	@erl -pa deps/*/ebin ../erlang_rel/ebin -config sys -s erlang_rel_app
 
 eunit: compile

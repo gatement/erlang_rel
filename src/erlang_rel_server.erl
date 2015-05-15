@@ -37,7 +37,7 @@ handle_cast(_Msg, State) ->
     {noreply, State}.
 
 handle_info(timeout, State) ->
-    error_logger:log_debug("~p~n", calendar:now()),
+    error_logger:info_msg("~p~n", [calendar:local_time()]),
     {noreply, State, ?TIMEOUT};
 handle_info(_Info, State) ->
     {noreply, State}.

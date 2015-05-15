@@ -2,12 +2,21 @@
 
 -behaviour(application).
 
+%% API
+-export([start/0]).
 %% Application callbacks
 -export([start/2, stop/1]).
 
 %% ===================================================================
 %% Application callbacks
 %% ===================================================================
+
+start() ->
+    application:start(crypto),
+    application:start(ranch),
+    application:start(cowlib),
+    application:start(cowboy),
+    application:start(erlang_rel).
 
 start(_StartType, _StartArgs) ->
 	Dispatch = cowboy_router:compile([

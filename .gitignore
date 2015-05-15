@@ -4,3 +4,7 @@ deps
 .rebar
 .DS_Store
 erl_crash.dump
+plain.*
+release.boot
+release.script
+release.tar.gz

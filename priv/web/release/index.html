@@ -83,17 +83,17 @@ function whichReleases() {
 };
 
 function unpackRelease() {
-    var param = $("unpack_release_param").val();
+    var param = $("#unpack_release_param").val();
     sendTxt("unpack_release|" + param);
 };
 
 function installRelease() {
-    var param = $("install_release_param").val();
+    var param = $("#install_release_param").val();
     sendTxt("install_release|" + param);
 };
 
 function makePermanent() {
-    var param = $("make_permanent_param").val();
+    var param = $("#make_permanent_param").val();
     sendTxt("make_permanent|" + param);
 };
 

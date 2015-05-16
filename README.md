@@ -2,6 +2,7 @@
 erlang release test
 
 ## Setup
+* `make`
 * Create the first tar by `./rel.sh pack app/root/dir`
 * Install the first target system by `./rel.sh install tar/file/without/ext target/dir`
 * Customize `target/dir/bin/start`
@@ -11,6 +12,8 @@ erlang release test
 * Use `target/dir/bin/to_erl /tmp/erlang_rel` to attach the erlang emulator 
 
 ## Upgrade
+* Update `erlang_rel.app.src`, `erlang_rel.appup`, `release.rel`
+* `make`
 * Genetate upgrade tar by `./rel.sh upgrade from/app/root/dir to/app/root/dir`
 * Copy the generated tar file to `/usr/local/erlang_rel/releases/`
 * Attach to the erlang emulator by `target/dir/bin/to_erl /tmp/erlang_rel` 

@@ -62,21 +62,39 @@ function onMessage(evt) {
     var vals = evt.data.split("|");
     var cmd = vals[0];
     var val = vals[1];
-    if(cmd == "msg")
-    {
-        output('<span style="color: red;">RESPONSE:[' + getTimeStr() + ']' + val + '</span>');
+    if(cmd == "msg") {
+        output('<span style="color: green;">RESPONSE:[' + getTimeStr() + '] ' + val + '</span>');
     }
 };  
 
 function onError(evt) {
-    output('<span style="color: red;">ERROR:[' + getTimeStr() + ']' + evt.data+ '</span>');
+    output('<span style="color: red;">ERROR:[' + getTimeStr() + '] ' + evt.data+ '</span>');
 };
 
 // ===================================================================
 // Handler Functions
 // ===================================================================
-function runTest() {
-    sendTxt("run_test");
+function uploadRelease() {
+    window.open ('/release/upload','release_upload','height=150,width=400,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+};
+
+function whichReleases() {
+    sendTxt("which_releases");
+};
+
+function unpackRelease() {
+    var param = $("unpack_release_param").val();
+    sendTxt("unpack_release|" + param);
+};
+
+function installRelease() {
+    var param = $("install_release_param").val();
+    sendTxt("install_release|" + param);
+};
+
+function makePermanent() {
+    var param = $("make_permanent_param").val();
+    sendTxt("make_permanent|" + param);
 };
 
 // ===================================================================
@@ -114,7 +132,19 @@ function getTimeStr() {
         <fieldset>
             <legend>operations</legend>
             <div id="operations">
-                <button id="clear" onclick="clearOutput()" >clear output</button>
+                <button id="which_releases" onclick="whichReleases()" >which releases</button> |
+                <button id="upload_release" onclick="uploadRelease()" >upload_release</button> |
+
+                <input id="unpack_release_param" type="textbox" style="width:100px" value="release"></input>
+                <button id="unpack_release" onclick="unpackRelease()">unpack release</button> |
+
+                <input id="install_release_param" type="textbox" style="width:100px"></input>
+                <button id="install_release" onclick="installRelease()" >install_release</button> |
+
+                <input id="make_permanent_param" type="textbox" style="width:100px"></input>
+                <button id="make_permanent" onclick="makePermanent()" >make_permanent</button> |
+
+                <button id="clear_output" onclick="clearOutput()">clear output</button>
             </div>
         </fieldset>
         <fieldset>

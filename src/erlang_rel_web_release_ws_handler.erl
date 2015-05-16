@@ -1,25 +1,69 @@
 -module(erlang_rel_web_release_ws_handler).
--behaviour(cowboy_http_handler).
+-behaviour(cowboy_websocket_handler).
 
--export([init/3]).
--export([handle/2]).
--export([terminate/3]).
+-export([init/3
+         ,websocket_init/3
+         ,websocket_handle/3
+         ,websocket_info/3
+         ,websocket_terminate/3]).
 
-init(_, Req, _Opts) ->
-	{ok, Req, undefined}.
+%% ===================================================================
+%% API Function Definitions
+%% ===================================================================
+init({ssl, http}, _Req, _Opts) ->
+    {upgrade, protocol, cowboy_websocket}.
 
-handle(Req, State) ->
-    %{PathInfo, Req2} = cowboy_req:path_info(Req),
-    %case {Method, PathInfo} of
-    %    {<<"GET">>, [<<"upload">>]} ->
+websocket_init(ssl, Req, _Opts) ->
+    {ok, Req, undefined_state}.
 
-	{ok, Headers, Req2} = cowboy_req:part(Req),
-	{ok, Data, Req3} = cowboy_req:part_body(Req2),
-	{file, <<"inputfile">>, Filename, ContentType, _TE} = cow_multipart:form_data(Headers),
-	io:format("Received file ~p of content-type ~p of length:~p~n", [Filename, ContentType, erlang:size(Data)]),
-    Path = io_lib:format("~s/../releases/~s", [code:lib_dir(), erlang:binary_to_list(Filename)]),
-    file:write_file(Path, Data),
-	{ok, Req3, State}.
+websocket_handle({text, Msg}, Req, State) ->
+    Tokens = string:tokens(erlang:binary_to_list(Msg), "|"),
+    [Cmd|RestParam] = Tokens,
+    Result = case Cmd of
+                 "which_releases" ->
+                     handle_which_releases(RestParam);
+                 "unpack_release" ->
+                     handle_unpack_release(RestParam);
+                 "install_release" ->
+                     handle_install_release(RestParam);
+                 "make_permanent" ->
+                     handle_make_permanent(RestParam);
+                 _ ->
+                     <<"unknown command">>
+             end,
+    {reply, {text, << "msg|", Result/binary >>}, Req, State};
+websocket_handle(_Data, Req, State) ->
+    {ok, Req, State}.
 
-terminate(_Reason, _Req, _State) ->
-	ok.
+websocket_info(_Info, Req, State) ->
+    {ok, Req, State}.
+
+websocket_terminate(_Reason, _Req, _State) ->
+    ok.
+
+%% ===================================================================
+%% Handler Functions
+%% ===================================================================
+handle_which_releases(_) ->
+    Releases = release_handler:which_releases(),
+
+    Fun = fun({_Name, Vsn, _Apps, Status}) -> {Vsn, Status} end,
+    Releases2 = lists:map(Fun, Releases),
+
+    erlang:list_to_binary(io_lib:format("~p", [Releases2])).
+
+handle_unpack_release([ReleaseName]) ->
+    Result = release_handler:unpack_release(ReleaseName),
+    erlang:list_to_binary(io_lib:format("~p", [Result])).
+
+handle_install_release([Vsn]) ->
+    Result = release_handler:install_release(Vsn),
+    erlang:list_to_binary(io_lib:format("~p", [Result])).
+
+handle_make_permanent([Vsn]) ->
+    Result = release_handler:make_permanent(Vsn),
+    erlang:list_to_binary(io_lib:format("~p", [Result])).
+
+%% ===================================================================
+%% Internal Function Definitions
+%% ===================================================================

@@ -23,7 +23,7 @@ start(_StartType, _StartArgs) ->
 			{"/release/upload", cowboy_static, {priv_file, erlang_rel, "web/release/upload.html"}},
 			{"/release", cowboy_static, {priv_file, erlang_rel, "web/release/index.html"}},
 			{"/ws/release", erlang_rel_web_release_ws_handler, []},
-			{"/api/release", erlang_rel_web_release_api_handler, []},
+			{"/api/release/[...]", erlang_rel_web_release_api_handler, []},
 			{"/static/[...]", cowboy_static, {priv_dir, erlang_rel, "web/static"}}
 		]}
 	]),

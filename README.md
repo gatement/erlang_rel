@@ -12,7 +12,7 @@ erlang release test
 * Use `target/dir/bin/to_erl /tmp/erlang_rel` to attach the erlang emulator 
 
 ## Upgrade
-* Update `erlang_rel.app.src`, `erlang_rel.appup`, `release.rel`
+* Update `src/erlang_rel.app.src`, `src/erlang_rel.appup`, `release.rel`
 * `make`
 * Genetate upgrade tar by `./rel.sh upgrade from/app/root/dir to/app/root/dir`
 * Copy the generated tar file to `/usr/local/erlang_rel/releases/`

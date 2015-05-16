@@ -18,3 +18,4 @@ erlang release test
 * List releases by `release_handler:which_releases().`
 * Install release by `release_handler:install_release("Vsn").`
 * Make permanent by `release_handler:make_permanent("Vsn").`
+* Or do it on Release Web Console `https://<domain.name>:<port>/release`

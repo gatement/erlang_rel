@@ -1,5 +1,5 @@
 {release,
- {"erlang_rel", "0.2.0"},
+ {"erlang_rel", "0.1.0"},
  {erts, "6.4"},
  [
   {kernel, "3.2"},
@@ -11,6 +11,6 @@
   {ranch, "1.0.0"},
   {cowboy, "1.0.1"},
 
-  {erlang_rel, "0.2.0"}
+  {erlang_rel, "0.1.0"}
  ]
 }.

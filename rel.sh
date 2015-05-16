@@ -8,7 +8,7 @@ if [ "pack" == "$1" -a "x" != "x$2" ] ; then
     erl -pa ${SASL_DIR}/examples/ebin $2/ebin $2/deps/*/ebin -eval "target_system:create(\"$REL_FILE\")" -s init stop
 
 # install first target system
-elif [ "intall" == "$1" -a "x" != "x$2" -a "x" != "x$3" ] ; then
+elif [ "install" == "$1" -a "x" != "x$2" -a "x" != "x$3" ] ; then
     erl -pa ${SASL_DIR}/examples/ebin -eval "target_system:install(\"$2\", \"$3\")" -s init stop
 
 # make upgrade tar

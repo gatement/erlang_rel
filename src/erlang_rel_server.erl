@@ -1,7 +1,7 @@
 -module(erlang_rel_server).
 -behaviour(gen_server).
 -define(SERVER, ?MODULE).
--define(TIMEOUT, 3000).
+-define(TIMEOUT, 1000).
 
 %% ------------------------------------------------------------------
 %% API Function Exports
@@ -37,7 +37,7 @@ handle_cast(_Msg, State) ->
     {noreply, State}.
 
 handle_info(timeout, State) ->
-    error_logger:info_msg("~p~n", [calendar:local_time()]),
+    error_logger:info_msg("~p: ~p~n", [1, calendar:local_time()]),
     {noreply, State, ?TIMEOUT};
 handle_info(_Info, State) ->
     {noreply, State}.

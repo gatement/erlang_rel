@@ -4,6 +4,9 @@
 -export([execute/2]).
 -define(APP, erlang_rel).
 
+%% ===================================================================
+%% API Function Definitions
+%% ===================================================================
 execute(Req, Env) ->
     case is_authorized(Req) of
         {true, _User, Req2} ->
@@ -13,6 +16,9 @@ execute(Req, Env) ->
             {stop, Req3}
     end.
 
+%% ===================================================================
+%% Internal Function Definitions
+%% ===================================================================
 is_authorized(Req) ->
     {ok, Username} = application:get_env(?CURRENT_APP_NAME, web_username),
     {ok, Password} = application:get_env(?CURRENT_APP_NAME, web_password),

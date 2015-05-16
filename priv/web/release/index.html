@@ -10,20 +10,21 @@ $(document).ready(init);
 
 function init() {
     if(!("WebSocket" in window)){  
-        $('#status').html('<p><span style="color: red;">websockets are not supported </span></p>');
+        $("#status").html('<p><span style="color: red;">websockets are not supported</span></p>');
         $("#content").hide();  
     } else {
-        $('#status').html('<p><span style="color: green;">server is not connected </span></p>');
-        $("#connected").hide(); 	
+        $("#status").html('<p><span style="color: green;">server is not connected</span></p>');
         connect();
     };
 };
 
-function connect()
-{
-    var wsHost = "wss://" + window.location.host + "/websocket";
+// ===================================================================
+// Websocket Functions
+// ===================================================================
+function connect() {
+    var wsHost = "wss://" + window.location.host + "/ws/release";
     websocket = new WebSocket(wsHost);
-    showScreen('<b>Connecting to: ' +  wsHost + '</b>'); 
+    output('<b>Connecting to: ' +  wsHost + '</b>'); 
     websocket.onopen = function(evt) { onOpen(evt) }; 
     websocket.onclose = function(evt) { onClose(evt) }; 
     websocket.onmessage = function(evt) { onMessage(evt) }; 
@@ -34,30 +35,27 @@ function disconnect() {
     websocket.close();
 }; 
 
-function runTest() {
-    sendTxt("run_test");
-}
-
 function sendTxt(txt) {
-    if(websocket.readyState == websocket.OPEN){
+    if(websocket.readyState == websocket.OPEN) {
         websocket.send(txt);
-        showScreen('SEND: ' + txt); 
+        output('SEND: ' + txt); 
     } else {
-        showScreen('Websocket is not connected'); 
+        output('Websocket is not connected'); 
     };
 };
 
+// ===================================================================
+// WebSocket Callback Functions
+// ===================================================================
 function onOpen(evt) { 
-    $('#status').html('<p><span style="color: green;">server is connected </span></p>');
-    showScreen('<span style="color: green;">CONNECTED </span>'); 
-    $("#connected").fadeIn('slow');
-    sendTxt("get_target_env");
+    $('#status').html('<p><span style="color: green;">server is connected</span></p>');
+    output('<span style="color: green;">CONNECTED</span>'); 
 };  
 
 function onClose(evt) { 
-    $('#status').html('<p><span style="color: green;">server is not connected </span></p>');
-    showScreen('<span style="color: red;">DISCONNECTED </span>');
-    window.setTimeout(connect, 5000);
+    $('#status').html('<p><span style="color: green;">server is not connected</span></p>');
+    output('<span style="color: red;">DISCONNECTED</span>');
+    window.setTimeout(connect, 5000); // reconnect
 };  
 
 function onMessage(evt) { 
@@ -66,39 +64,33 @@ function onMessage(evt) {
     var val = vals[1];
     if(cmd == "msg")
     {
-        $('#runBtn').attr('disabled', 'disabled');
-        showScreen('RESPONSE: [' + getTimeStr() + ']' + val); 
-    }
-    else if(cmd == "error")
-    {
-        showScreen('<span style="color: red;">RESPONSE :[' + getTimeStr() + ']' + val + '</span>');
-    }
-    else if(cmd == "target_env")
-    {
-        $('#target_env').text(val);
-    }
-    else if(cmd == "result")
-    {
-        $('#runBtn').removeAttr('disabled');
-        showScreen('RESULT: ' + val); 
+        output('<span style="color: red;">RESPONSE:[' + getTimeStr() + ']' + val + '</span>');
     }
 };  
 
 function onError(evt) {
-    showScreen('<span style="color: red;">ERROR: ' + evt.data+ '</span>');
+    output('<span style="color: red;">ERROR:[' + getTimeStr() + ']' + evt.data+ '</span>');
 };
 
-function showScreen(txt) { 
+// ===================================================================
+// Handler Functions
+// ===================================================================
+function runTest() {
+    sendTxt("run_test");
+};
+
+// ===================================================================
+// Helper Functions
+// ===================================================================
+function output(txt) { 
     $('#output').prepend('<p>' + txt + '</p>');
 };
 
-function clearScreen() 
-{ 
+function clearOutput() { 
     $('#output').html("");
 };
 
-function getTimeStr()
-{
+function getTimeStr() {
     var now = new Date();
     var hours = now.getHours();
     var minutes = now.getMinutes();
@@ -109,31 +101,26 @@ function getTimeStr()
     timeValue += ((seconds < 10) ? ":0" : ":") + seconds;
     return timeValue;
 };
+
 </script>
 </head>
 
 <body>
-<div id="header">
-    <h2>Test console - <span id="target_env"></span></h2>
-    <div id="status"></div>
-</div>
-
-
-<div id="content">
-    <div id="connected">		
-        <p>
-        <button id="runBtn" type="button" onclick="runTest();">run</button>
-        <a href="/log/index.html" target="_blank">test results</a>
-        </p>
+    <div id="header">
+        <h3>Release Console</h3>
+        <div id="status"></div>
     </div>
-
-    <div id="log">						
-        <button id="clear" onclick="clearScreen()" >clear log</button>
+    <div id="content">
         <fieldset>
-            <legend>log</legend>
+            <legend>operations</legend>
+            <div id="operations">
+                <button id="clear" onclick="clearOutput()" >clear output</button>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>output</legend>
             <div id="output"></div>
         </fieldset>
     </div>
-</div>
 </body>
 </html> 

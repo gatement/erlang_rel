@@ -89,7 +89,9 @@ function unpackRelease() {
 
 function installRelease() {
     var param = $("#install_release_param").val();
-    sendTxt("install_release|" + param);
+    if(window.confirm("are you sure to install " + param + "?")) {
+        sendTxt("install_release|" + param);
+    }
 };
 
 function makePermanent() {

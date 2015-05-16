@@ -1,6 +1,6 @@
 -module(erlang_rel_app).
-
 -behaviour(application).
+-include("erlang_rel.hrl").
 
 %% API
 -export([start/0]).
@@ -21,12 +21,25 @@ start() ->
 start(_StartType, _StartArgs) ->
 	Dispatch = cowboy_router:compile([
 		{'_', [
-			{"/", erlang_rel_http_handler, []}
+			{"/release", cowboy_static, {priv_file, erlang_rel, "web/release/index.html"}},
+			{"/release/upload", cowboy_static, {priv_file, erlang_rel, "web/release/upload.html"}},
+			{"/ws/release", erlang_rel_web_release_ws_handler, []},
+			{"/api/release", erlang_rel_web_release_api_handler, []},
+			{"/static/[...]", cowboy_static, {priv_dir, erlang_rel, "web/static"}}
 		]}
 	]),
-	{ok, _} = cowboy:start_http(http, 100, [{port, 8080}], [
-		{env, [{dispatch, Dispatch}]}
-	]),
+    PrivDir = code:priv_dir(?CURRENT_APP_NAME),
+    {ok, Port} = application:get_env(web_port),
+    {ok, _Pid} = cowboy:start_https(https, 6, [
+                        {port, Port},
+                        {cacertfile, PrivDir ++ "/ssl/cacert.pem"},
+                        {certfile, PrivDir ++ "/ssl/cert.pem"},
+                        {keyfile, PrivDir ++ "/ssl/key.pem"}
+                    ],
+                    [
+                        {env, [{dispatch, Dispatch}]},
+                        {middlewares, [erlang_rel_web_auth_middleware, cowboy_router, cowboy_handler]}
+                    ]),
 
     erlang_rel_sup:start_link().
 

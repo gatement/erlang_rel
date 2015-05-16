@@ -1,3 +1,1 @@
-%% records
--record(state, {pid}).
-
+-define(CURRENT_APP_NAME, erlang_rel).

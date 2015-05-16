@@ -8,5 +8,9 @@
                   stdlib
                  ]},
   {mod, { erlang_rel_app, []}},
-  {env, []}
+  {env, [
+      {web_port, 8080},
+      {web_username, <<"lgh">>},
+      {web_password, <<"lgh">>}
+  ]}
  ]}.

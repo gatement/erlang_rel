@@ -89,14 +89,16 @@ function unpackRelease() {
 
 function installRelease() {
     var param = $("#install_release_param").val();
-    if(window.confirm("are you sure to install " + param + "?")) {
+    if(window.confirm("are you sure to install '" + param + "'?")) {
         sendTxt("install_release|" + param);
     }
 };
 
 function makePermanent() {
     var param = $("#make_permanent_param").val();
-    sendTxt("make_permanent|" + param);
+    if(window.confirm("are you sure to make '" + param + "' permanent?")) {
+        sendTxt("make_permanent|" + param);
+    }
 };
 
 // ===================================================================

@@ -94,10 +94,23 @@ function installRelease() {
     }
 };
 
+function removeRelease() {
+    var param = $("#remove_release_param").val();
+    if(window.confirm("are you sure to remove '" + param + "'?")) {
+        sendTxt("remove_release|" + param);
+    }
+};
+
 function makePermanent() {
     var param = $("#make_permanent_param").val();
     if(window.confirm("are you sure to make '" + param + "' permanent?")) {
         sendTxt("make_permanent|" + param);
+    }
+};
+
+function reboot() {
+    if(window.confirm("are you sure to reboot?")) {
+        sendTxt("reboot");
     }
 };
 
@@ -145,8 +158,13 @@ function getTimeStr() {
                 <input id="install_release_param" type="textbox" style="width:60px"></input>
                 <button id="install_release" onclick="installRelease()" >install_release</button> |
 
+                <input id="remove_release_param" type="textbox" style="width:60px"></input>
+                <button id="remove_release" onclick="removeRelease()" >remove_release</button> |
+
                 <input id="make_permanent_param" type="textbox" style="width:60px"></input>
                 <button id="make_permanent" onclick="makePermanent()" >make_permanent</button> |
+
+                <button id="reboot" onclick="reboot()" >reboot</button> |
 
                 <button id="clear_output" onclick="clearOutput()">clear output</button>
             </div>

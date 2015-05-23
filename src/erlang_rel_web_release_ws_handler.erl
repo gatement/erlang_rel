@@ -26,8 +26,12 @@ websocket_handle({text, Msg}, Req, State) ->
                      handle_unpack_release(RestParam);
                  "install_release" ->
                      handle_install_release(RestParam);
+                 "remove_release" ->
+                     handle_remove_release(RestParam);
                  "make_permanent" ->
                      handle_make_permanent(RestParam);
+                 "reboot" ->
+                     handle_reboot(RestParam);
                  _ ->
                      <<"unknown command">>
              end,
@@ -60,8 +64,16 @@ handle_install_release([Vsn]) ->
     Result = release_handler:install_release(Vsn),
     erlang:list_to_binary(io_lib:format("~p", [Result])).
 
+handle_remove_release([Vsn]) ->
+    Result = release_handler:remove_release(Vsn),
+    erlang:list_to_binary(io_lib:format("~p", [Result])).
+
 handle_make_permanent([Vsn]) ->
     Result = release_handler:make_permanent(Vsn),
+    erlang:list_to_binary(io_lib:format("~p", [Result])).
+
+handle_reboot(_) ->
+    Result = init:reboot(),
     erlang:list_to_binary(io_lib:format("~p", [Result])).
 
 %% ===================================================================

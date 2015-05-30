@@ -114,6 +114,12 @@ function reboot() {
     }
 };
 
+function shutdown() {
+    if(window.confirm("are you sure to shutdown?")) {
+        sendTxt("shutdown");
+    }
+};
+
 // ===================================================================
 // Helper Functions
 // ===================================================================
@@ -165,6 +171,7 @@ function getTimeStr() {
                 <button id="make_permanent" onclick="makePermanent()" >make permanent</button> |
 
                 <button id="reboot" onclick="reboot()" >reboot</button> |
+                <button id="shutdown" onclick="shutdown()" >shutdown</button> |
 
                 <button id="clear_output" onclick="clearOutput()">clear output</button>
             </div>

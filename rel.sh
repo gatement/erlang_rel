@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SASL_DIR=/usr/local/Cellar/erlang/17.5/lib/erlang/lib/sasl-2.4.1
+SASL_DIR=/usr/local/erlang-17.4/lib/erlang/lib/sasl-2.4.1
 
 # make first tar
 if [ "pack" == "$1" -a "x" != "x$2" ] ; then

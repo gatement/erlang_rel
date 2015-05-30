@@ -20,12 +20,12 @@ start() ->
 start(_StartType, _StartArgs) ->
 	Dispatch = cowboy_router:compile([
 		{'_', [
-			{"/release/upload", cowboy_static, {priv_file, erlang_rel, "web/release/upload.html"}},
-			{"/release", cowboy_static, {priv_file, erlang_rel, "web/release/index.html"}},
-			{"/", cowboy_static, {priv_file, erlang_rel, "web/index.html"}},
+			{"/release/upload", cowboy_static, {priv_file, ?CURRENT_APP_NAME, "web/release/upload.html"}},
+			{"/release", cowboy_static, {priv_file, ?CURRENT_APP_NAME, "web/release/index.html"}},
+			{"/", cowboy_static, {priv_file, ?CURRENT_APP_NAME, "web/index.html"}},
 			{"/ws/release", erlang_rel_web_release_ws_handler, []},
 			{"/api/release/[...]", erlang_rel_web_release_api_handler, []},
-			{"/static/[...]", cowboy_static, {priv_dir, erlang_rel, "web/static"}}
+			{"/static/[...]", cowboy_static, {priv_dir, ?CURRENT_APP_NAME, "web/static"}}
 		]}
 	]),
     PrivDir = code:priv_dir(?CURRENT_APP_NAME),

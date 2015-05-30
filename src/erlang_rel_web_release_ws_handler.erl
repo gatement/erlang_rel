@@ -32,6 +32,8 @@ websocket_handle({text, Msg}, Req, State) ->
                      handle_make_permanent(RestParam);
                  "reboot" ->
                      handle_reboot(RestParam);
+                 "shutdown" ->
+                     handle_shutdown(RestParam);
                  _ ->
                      <<"unknown command">>
              end,
@@ -74,6 +76,10 @@ handle_make_permanent([Vsn]) ->
 
 handle_reboot(_) ->
     Result = init:reboot(),
+    erlang:list_to_binary(io_lib:format("~p", [Result])).
+
+handle_shutdown(_) ->
+    Result = init:stop(),
     erlang:list_to_binary(io_lib:format("~p", [Result])).
 
 %% ===================================================================

@@ -29,17 +29,30 @@ terminate(_Reason, _Req, _State) ->
 %% Internal Function Definitions
 %% ===================================================================
 handle_upload(Req) ->
-    {ok, Headers, Req2} = cowboy_req:part(Req),
-    {ok, Data, Req3} = cowboy_req:part_body(Req2),
-    {file, <<"inputfile">>, Filename, _ContentType, _TE} = cow_multipart:form_data(Headers),
+    receive_multipart(Req).
+
+receive_multipart(Req) ->
+    %% there is only one part in the request, so only get part once
+    {ok, Headers, Req2} = cowboy_req:part(Req), 
+    {file, <<"inputfile">>, Filename, _ContentType, _CTransferEncoding} = cow_multipart:form_data(Headers),
+    %% receive the whole file
+    {Data, Req3} = stream_file(<<>>, Req2),
+    %% filename must have file extension ".tar.gz"
     FilenameStr = erlang:binary_to_list(Filename),
-    %% Filename starts with ".tar.gz"
-    EndsWithExt = string:str(FilenameStr, ".tar.gz") == erlang:length(FilenameStr) - 6,
-    case EndsWithExt of
+    WithRightExt = string:str(FilenameStr, ".tar.gz") == erlang:length(FilenameStr) - 6,
+    case WithRightExt of
         true -> 
             Path = io_lib:format("~s/../releases/~s", [code:lib_dir(), FilenameStr]),
             file:write_file(Path, Data),
             cowboy_req:reply(200, [{<<"content-type">>, <<"text/plain">>}], <<"Succeeded.">>, Req3);
         _ ->
             cowboy_req:reply(400, [{<<"content-type">>, <<"text/plain">>}], <<"File must be with extension \".tar.gz\".">>, Req3)
+    end.
+
+stream_file(ReceivedData, Req) ->
+    case cowboy_req:part_body(Req) of
+        {ok, Data, Req2} ->
+            {<<ReceivedData/binary, Data/binary>>, Req2};
+        {more, Data, Req2} ->
+            stream_file(<<ReceivedData/binary, Data/binary>>, Req2)
     end.
